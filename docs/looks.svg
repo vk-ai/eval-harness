@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-label="eval-harness report">
+  <rect width="960" height="540" fill="#f4efe6"/>
+  <text x="48" y="56" font-family="Georgia, serif" font-size="28" fill="#1c1917">What the report looks like</text>
+  <rect x="48" y="88" width="864" height="380" rx="16" fill="#fff" stroke="#1c1917" stroke-width="1.5"/>
+  <text x="80" y="140" font-family="ui-monospace, monospace" font-size="18" fill="#1c1917"># eval-harness</text>
+  <text x="80" y="180" font-family="Georgia, serif" font-size="22" fill="#1c1917">Passed 1/2</text>
+  <rect x="80" y="212" width="800" height="56" rx="8" fill="#ecf4e8"/>
+  <text x="104" y="248" font-family="ui-monospace, monospace" font-size="16" fill="#1c1917">t1   PASS    2+2 → 4</text>
+  <rect x="80" y="284" width="800" height="88" rx="8" fill="#f8ebe6"/>
+  <text x="104" y="320" font-family="ui-monospace, monospace" font-size="16" fill="#1c1917">t2   FAIL    hello  expected world</text>
+  <text x="104" y="348" font-family="ui-monospace, monospace" font-size="14" fill="#78716c">actual: hello there</text>
+  <text x="80" y="430" font-family="Georgia, serif" font-size="14" fill="#78716c">Print this markdown in CI. Fail the job when score drops.</text>
+</svg>

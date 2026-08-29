@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eval-harness"
+version = "0.1.0"
+description = "Tiny Python eval runner: tasks, exact/contains/regex judges, markdown CI report."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "vk-ai" }]
+keywords = ["llm", "eval", "agents"]
+[project.urls]
+Homepage = "https://github.com/vk-ai/eval-harness"
+Issues = "https://github.com/vk-ai/eval-harness/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/eval_harness"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/eval_harness" = "eval_harness"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
