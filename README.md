@@ -45,4 +45,43 @@ h = Harness([Task("kenya", "Capital of Kenya?", "Nairobi", contains)])
 print(h.report(h.run(lambda p: "Nairobi")))
 ```
 
+## Trajectory-aware judging
+
+A correct final answer can still hide a bad path (forbidden tools, over-long
+loops, dangerous details). Return a `Trajectory` and attach path judges:
+
+```python
+from eval_harness import (
+    Step,
+    Trajectory,
+    TrajectoryHarness,
+    TrajectoryTask,
+    contains,
+    forbid_actions,
+    max_steps,
+)
+
+h = TrajectoryHarness([
+    TrajectoryTask(
+        "kenya",
+        "Capital of Kenya?",
+        "Nairobi",
+        contains,
+        path_judges=(forbid_actions("shell"), max_steps(4)),
+    )
+])
+
+def agent(prompt: str) -> Trajectory:
+    return Trajectory(
+        steps=(Step("retrieve", "wiki"), Step("llm", "answer")),
+        final="Nairobi",
+    )
+
+print(h.report(h.run(agent)))
+```
+
+Built-ins: `forbid_actions`, `require_actions`, `max_steps`, `forbid_detail_substr`.
+Outcome and path are scored separately; `ok` requires both. Still zero deps /
+no LLM-as-judge.
+
 MIT. Python 3.10+.
