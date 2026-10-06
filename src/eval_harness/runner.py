@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Sequence
+from typing import TYPE_CHECKING, Callable, Sequence
 
 from .judges import Judge, exact
+
+if TYPE_CHECKING:
+    from .baseline import Comparison
 
 
 @dataclass(frozen=True)
@@ -47,6 +50,25 @@ class Harness:
                 lines.append(f"  - expected: {r.expected!r}")
                 lines.append(f"  - actual: {r.actual!r}")
         return "\n".join(lines) + "\n"
+
+    def save(self, results: Sequence[TaskResult], path: str, **meta: object) -> None:
+        """Save results as JSON for :meth:`compare` / ``python -m eval_harness``."""
+        from .baseline import save_results
+
+        save_results(results, path, meta=meta or None)
+
+    def compare(
+        self,
+        results: Sequence[TaskResult],
+        baseline_path: str,
+        *,
+        tolerance: float = 0.0,
+        case_tolerance: float = 0.0,
+    ) -> "Comparison":
+        """Compare ``results`` to a saved baseline; ``.ok`` is False only on regressions."""
+        from .baseline import compare
+
+        return compare(baseline_path, results, tolerance=tolerance, case_tolerance=case_tolerance)
 
     def score(self, results: Sequence[TaskResult]) -> float:
         if not results:

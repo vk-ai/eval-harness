@@ -84,4 +84,35 @@ Built-ins: `forbid_actions`, `require_actions`, `max_steps`, `forbid_detail_subs
 Outcome and path are scored separately; `ok` requires both. Still zero deps /
 no LLM-as-judge.
 
+## Baseline compare (fail only on regressions)
+
+An absolute bar fails forever on a known-hard task and can miss a real drop
+that stays above it. Save results from `main`, compare each PR against them:
+
+```python
+h.save(h.run(agent), "evals/baseline.json")          # on main (commit the file)
+cmp = h.compare(h.run(agent), "evals/baseline.json", tolerance=0.02)
+print(cmp.report())                                   # regressions / fixes / new / missing
+raise SystemExit(cmp.exit_code)                       # 1 only on regressions
+```
+
+Or from the shell, with results saved by `save_results(results, "current.json")`:
+
+```bash
+python -m eval_harness compare evals/baseline.json current.json --tolerance 0.02
+python -m eval_harness save-baseline current.json evals/baseline.json   # refuses a regressed run
+python -m eval_harness save-baseline current.json evals/baseline.json --force
+```
+
+- **Per case:** PASS → FAIL, or a graded `score` drop beyond `--case-tolerance`,
+  is a regression. A task that disappeared counts too, unless you pass `--allow-missing`.
+- **Aggregate:** the mean over shared tasks may drop by at most `--tolerance`.
+- Known failures, fixes and new tasks are reported but never fail the run.
+- The report includes an exact McNemar p-value on the flipped tasks. It is a
+  "noise vs real" hint only and never gates.
+- The baseline is sorted JSON, so it diffs cleanly in review. Exit codes:
+  `0` ok, `1` regression, `2` bad input.
+
+See [`examples/baseline_compare.py`](examples/baseline_compare.py).
+
 MIT. Python 3.10+.
